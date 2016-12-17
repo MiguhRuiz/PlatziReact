@@ -25,6 +25,11 @@ const api = {
             const response = await fetch(`${baseURL}/users/${id}`)
             const data = await response.json()
             return data
+        },
+        async getPosts(id = 1) {
+            const response = await fetch(`${baseURL}/posts/?userId=${id}`)
+            const data = await response.json()
+            return data
         }
     }
 }
