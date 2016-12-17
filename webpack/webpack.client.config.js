@@ -1,6 +1,9 @@
 /**
  * Created by miguhruiz on 17/12/16.
  */
+
+const extractTextPlugin = require('extract-text-webpack-plugin')
+
 module.exports = {
     entry: './source/client.js',
     output: {
@@ -27,8 +30,15 @@ module.exports = {
                         'transform-es2015-modules-commonjs'
                     ]
                 }
+            },
+            {
+                test: /\.css$/,
+                loader: extractTextPlugin.extract('style', 'css?modules')
             }
         ]
     },
-    target: 'web'
+    target: 'web',
+    plugins: [
+        new extractTextPlugin('../statics/styles.css')
+    ]
 }
