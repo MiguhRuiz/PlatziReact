@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router'
 
 import Post from '../../posts/containers/Post.jsx'
+import Loading from '../../shared/components/loading.jsx'
 
 import api from '../../api'
 
@@ -24,22 +25,19 @@ class Home extends Component {
         })
     }
     render() {
-        return(
-            <section name="Home">
-                <h1>Home</h1>
+        return (
+           <section name="Home">
+                    <h1>Home</h1>
 
-                <section>
-                    {this.state.loading && (
-                        <h2>Loading posts..</h2>
-                    )}
-                    {this.state.posts.map(post =>
-                        <Post key={post.id} {...post}/>
-                    )}
+                    <section>
+                        {this.state.loading && (
+                            <Loading />
+                        )}
+                        {this.state.posts.map(post =>
+                            <Post key={post.id} {...post}/>
+                        )}
+                    </section>
                 </section>
-                <Link to="/about">
-                    Go to about
-                </Link>
-            </section>
         )
     }
 }
