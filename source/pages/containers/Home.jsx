@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
 
-import Post from '../../feature/post/containers/Post.jsx'
+import Post from '../../posts/containers/Post.jsx'
 
 import api from '../../api'
 
