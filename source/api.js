@@ -14,7 +14,7 @@ const api = {
             const data = await response.json()
             return data
         },
-        async getComment(id = 3) {
+        async getComments(id = 3) {
             const response = await fetch(`${baseURL}/posts/${id}/comments`)
             const data = await response.json()
             return data
