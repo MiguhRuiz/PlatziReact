@@ -8,9 +8,11 @@ import { ServerRouter, createServerRenderContext } from 'react-router'
 import { IntlProvider } from 'react-intl'
 
 import Pages from './pages/containers/Page.jsx'
-import Layout from './pages/component/Layout.jsx'
+import Layout from './pages/component/layout.jsx'
 
 import messages from './messages.json'
+
+const domain = process.env.NODE_ENV === 'production' ? 'https://platzi-react-redux-sfs.now.sh' : 'http://localhost:3001'
 
 function requestHandler(request, response) {
     const locale = request.headers['accept-language'].indexOf('es') >= 0 ? 'es' : 'en'
@@ -54,6 +56,7 @@ function requestHandler(request, response) {
             <Layout
                 title="Aplicación"
                 content={html}
+                domain={domain}
             />
         )
     )
