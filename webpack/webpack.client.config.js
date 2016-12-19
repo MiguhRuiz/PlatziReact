@@ -11,6 +11,12 @@ module.exports = {
         path: './built/statics'
     },
     module: {
+        preloaders: [
+            {
+                test: /\.jsx?/,
+                loader: 'eslint'
+            }
+        ],
         loaders: [
             {
                 test: /\.json$/,
