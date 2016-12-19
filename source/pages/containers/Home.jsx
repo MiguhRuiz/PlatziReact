@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
+import { FormattedMessage } from 'react-intl'
 
 import Post from '../../posts/containers/Post.jsx'
 import Loading from '../../shared/components/loading.jsx'
@@ -69,7 +70,7 @@ class Home extends Component {
     render() {
         return (
            <section name="Home" className={Styles.section}>
-
+                    <FormattedMessage id="title.home" />
                     <section className={Styles.list}>
                         {this.state.posts.map(post =>
                             <Post key={post.id} {...post}/>
