@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { Link } from 'react-router'
 import { FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
 
 import Post from '../../posts/containers/Post.jsx'
 import Loading from '../../shared/components/loading.jsx'
@@ -10,25 +11,25 @@ import api from '../../api'
 
 import Styles from './Page.css'
 
+import actions from '../../actions'
+
 class Home extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            page: 1,
-            posts: [],
             loading: true
         }
 
         this.handleScroll = this.handleScroll.bind(this)
     }
     async componentDidMount() {
-        const posts = await api.posts.getList(this.state.page)
+        const posts = await api.posts.getList(this.props.page)
 
-        this.setState({
-            posts,
-            page: this.state.page + 1,
-            loading: false
-        })
+        this.props.dispatch(
+            actions.setPost(posts)
+        )
+
+        this.setState({ loading: false })
 
         window.addEventListener('scroll', this.handleScroll)
     }
@@ -52,12 +53,13 @@ class Home extends Component {
             loading: true
         }, async () => {
             try {
-                const posts = await api.posts.getList(this.state.page)
-                this.setState({
-                    posts: this.state.posts.concat(posts),
-                    page: this.state.page + 1,
-                    loading: false
-                })
+                const posts = await api.posts.getList(this.props.page)
+
+                this.props.dispatch(
+                    actions.setPost(posts)
+                )
+
+                this.setState({ loading: false })
             } catch(error) {
                 console.error(error)
                 this.state({
@@ -72,7 +74,7 @@ class Home extends Component {
            <section name="Home" className={Styles.section}>
                     <FormattedMessage id="title.home" />
                     <section className={Styles.list}>
-                        {this.state.posts.map(post =>
+                        {this.props.posts.map(post =>
                             <Post key={post.id} {...post}/>
                         )}
                         {this.state.loading && (
@@ -84,4 +86,23 @@ class Home extends Component {
     }
 }
 
-export default Home
+Home.propTypes = {
+    dispatch: PropTypes.func,
+    posts: PropTypes.arrayOf(PropTypes.object),
+    page: PropTypes.number
+}
+
+function mapStateToProps(state) {
+    return {
+        posts: state.posts.entities,
+        page: state.posts.page
+    }
+}
+
+//function mapDispatchToProps(dispatch, props) {
+//    return {
+//        dispatch
+//    }
+//}
+
+export default connect(mapStateToProps)(Home)
