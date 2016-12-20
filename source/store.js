@@ -1,19 +1,26 @@
 /**
  * Created by miguhruiz on 19/12/16.
  */
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
+import createLogger from 'redux-logger'
 
 import reducer from './reducer'
 
-const store = createStore(reducer)
+/*const logger = store => next => (action) => {
+    console.group('logger')
+    console.debug('estado actual', store.getState())
+    console.debug('acción', action)
+    const result = next(action)
+    console.debug('estado nuevo', store.getState())
+    console.groupEnd('logger')
+    return result
+ }*/
 
-store.subscribe(() => {
-    const state = store.getState()
-})
-
-store.dispatch({
-    type: 'SET_POST',
-    payload: {}
-})
+const store = createStore(
+    reducer,
+    applyMiddleware(
+        createLogger()
+    )
+)
 
 export default store
