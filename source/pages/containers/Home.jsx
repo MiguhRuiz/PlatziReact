@@ -8,8 +8,6 @@ import Post from '../../posts/containers/Post.jsx'
 import Loading from '../../shared/components/loading.jsx'
 import Header from '../../shared/components/header.jsx'
 
-import api from '../../api'
-
 import Styles from './Page.css'
 
 import actions from '../../actions'
@@ -65,9 +63,10 @@ class Home extends Component {
            <section name="Home" className={Styles.section}>
                     <FormattedMessage id="title.home" />
                     <section className={Styles.list}>
-                        {this.props.posts.map(post =>
-                            <Post key={post.id} {...post}/>
-                        )}
+                        {this.props.posts
+                            .map(post => <Post key={post.get('id')} {...post.toJS()}/>)
+                            .toArray()
+                        }
                         {this.state.loading && (
                             <Loading />
                         )}
@@ -79,14 +78,12 @@ class Home extends Component {
 
 Home.propTypes = {
     actions: PropTypes.objectOf(PropTypes.func),
-    posts: PropTypes.arrayOf(PropTypes.object),
-    page: PropTypes.number
+    posts: PropTypes.objectOf(PropTypes.object)
 }
 
 function mapStateToProps(state) {
     return {
-        posts: state.posts.entities,
-        page: state.posts.page
+        posts: state.get('posts').get('entities')
     }
 }
 
