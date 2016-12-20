@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { Link } from 'react-router'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 import Post from '../../posts/containers/Post.jsx'
 import Loading from '../../shared/components/loading.jsx'
@@ -23,12 +24,7 @@ class Home extends Component {
         this.handleScroll = this.handleScroll.bind(this)
     }
     async componentDidMount() {
-        const posts = await api.posts.getList(this.props.page)
-
-        this.props.dispatch(
-            actions.setPost(posts)
-        )
-
+        await this.props.actions.postsNextPage()
         this.setState({ loading: false })
 
         window.addEventListener('scroll', this.handleScroll)
@@ -53,12 +49,7 @@ class Home extends Component {
             loading: true
         }, async () => {
             try {
-                const posts = await api.posts.getList(this.props.page)
-
-                this.props.dispatch(
-                    actions.setPost(posts)
-                )
-
+                await this.props.actions.postsNextPage()
                 this.setState({ loading: false })
             } catch(error) {
                 console.error(error)
@@ -87,7 +78,7 @@ class Home extends Component {
 }
 
 Home.propTypes = {
-    dispatch: PropTypes.func,
+    actions: PropTypes.objectOf(PropTypes.func),
     posts: PropTypes.arrayOf(PropTypes.object),
     page: PropTypes.number
 }
@@ -99,10 +90,10 @@ function mapStateToProps(state) {
     }
 }
 
-//function mapDispatchToProps(dispatch, props) {
-//    return {
-//        dispatch
-//    }
-//}
+function mapDispatchToProps(dispatch) {
+   return {
+       actions: bindActionCreators(actions, dispatch)
+   }
+}
 
-export default connect(mapStateToProps)(Home)
+export default connect(mapStateToProps, mapDispatchToProps)(Home)
