@@ -26,6 +26,7 @@ class Home extends Component {
         this.setState({ loading: false })
 
         window.addEventListener('scroll', this.handleScroll)
+        document.title = 'Inicio || Mi primera aplicación con React'
     }
 
     componentWillUnmount() {

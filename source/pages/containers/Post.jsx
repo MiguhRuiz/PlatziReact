@@ -32,6 +32,9 @@ class Post extends Component {
             post,
             comments
         })
+        let w1 = this.state.post.title.split(' ')[0]
+        let w2 = this.state.post.title.split(' ')[1]
+        document.title = `${w1} ${w2}... en Mi Primera Aplicación con React`
     }
 
     render() {

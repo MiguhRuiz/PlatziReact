@@ -27,6 +27,8 @@ class Profile extends Component {
             posts,
             loading: false
         })
+
+        document.title = `${this.state.user.name} en Mi Primera Aplicación en React`
     }
 
     render() {
