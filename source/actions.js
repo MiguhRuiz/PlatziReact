@@ -58,10 +58,19 @@ function loadUser(userId) {
     }
 }
 
+function loadUserPosts(userId) {
+    return async(dispatch) => {
+        const posts = await api.users.getPosts(userId)
+        dispatch(setPost(posts))
+        return posts
+    }
+}
+
 export default {
     postsNextPage,
     loadCommentsForPost,
     loadUser,
+    loadUserPosts,
     setPost,
     setComments,
     setUser
