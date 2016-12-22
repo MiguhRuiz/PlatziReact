@@ -25,6 +25,13 @@ function setUser(user) {
     }
 }
 
+function setSingle(post) {
+    return {
+        type: 'SET_SINGLE',
+        payload: post
+    }
+}
+
 function postsNextPage() {
     return async(dispatch, getState) => {
         console.log('accion asincrona')
@@ -38,6 +45,14 @@ function postsNextPage() {
         )
 
         return posts
+    }
+}
+
+function loadSinglePost(postId) {
+    return async(dispatch) => {
+        const post = await api.posts.getSingle(postId)
+        dispatch(setSingle(post))
+        return post
     }
 }
 
@@ -68,6 +83,7 @@ function loadUserPosts(userId) {
 
 export default {
     postsNextPage,
+    loadSinglePost,
     loadCommentsForPost,
     loadUser,
     loadUserPosts,

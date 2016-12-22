@@ -1,37 +1,26 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 import PostBody from '../../posts/containers/Post.jsx'
 import Loading from '../../shared/components/loading.jsx'
 import Comment from '../../comments/components/Comment.jsx'
 
-import api from '../../api'
+import actions from '../../actions'
 
 class Post extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            loading: true,
-            user: {},
-            post: {},
-            comments: []
-        }
+        this.state = { loading: true }
     }
 
     async componentDidMount() {
-        const [post, comments] = await Promise.all([
-            api.posts.getSingle(this.props.params.id),
-            api.posts.getComments(this.props.params.id)
-        ])
+        await this.props.actions.loadSinglePost(this.props.params.id)
+        await this.props.actions.loadUser(this.props.post.get('userId'))
+        await this.props.actions.loadCommentsForPost(this.props.params.id)
 
-        const user = await api.users.getSingle(post.userId)
-
-        this.setState({
-            loading: false,
-            user,
-            post,
-            comments
-        })
+        this.setState({ loading: false })
     }
 
     render() {
@@ -40,22 +29,38 @@ class Post extends Component {
         }
         return(
             <section name="About">
-                <PostBody
-                    {...this.state.post}
-                    user={this.state.user}
-                    comments={this.state.comments}
-                />
+
                 <section>
-                    {this.state.comments.map(comment => {
+                    <PostBody
+                        {...this.props.post.toJS()}
+                        user={this.props.user.toJS()}
+                        comments={this.props.comments.toJS()}
+                    />
+                    {this.props.comments.map(comment => {
                         return <Comment
-                                    key={comment.id}
-                                    {...comment}
+                                    key={comment.get('id')}
+                                    {...comment.toJS()}
                                 />
-                    })}
+                    }).toArray()
+                    }
                 </section>
             </section>
         )
     }
 }
 
-export default Post
+function mapStateToProps(state, props) {
+    return {
+        post: state.get('post').first(),
+        user: state.get('users').first(),
+        comments: state.get('comments')
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators(actions, dispatch)
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Post)
